@@ -6,26 +6,25 @@ app = FastAPI()
 
 API_KEY = "miclave123"  # cámbiala por la que tú quieras
 
-class FileMeta(BaseModel):
-    id: str
-
 class RequestData(BaseModel):
     fileIds: List[str]
-    fileMetas: List[FileMeta]
+    contents: List[str]
+
 @app.get("/")
 async def root():
     print("Hola mundo ")
-    
+
 @app.post("/emparejar")
 async def emparejar(data: RequestData, x_api_key: Optional[str] = Header(None)):
     if x_api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Invalid API Key")
 
-    paired = []
-    for i in range(min(len(data.fileIds), len(data.fileMetas))):
-        paired.append({
-            "fileId": data.fileMetas[i].id,
-            "content": data.fileIds[i]
+    result = []
+    for i in range(min(len(data.fileIds), len(data.contents))):
+        result.append({
+            "fileId": data.fileIds[i],
+            "content": data.contents[i]
         })
 
-    return {"archivosConContenido": paired}
+    return {"archivosConContenido": result}
+
