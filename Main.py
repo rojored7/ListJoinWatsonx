@@ -12,7 +12,10 @@ class FileMeta(BaseModel):
 class RequestData(BaseModel):
     fileIds: List[str]
     fileMetas: List[FileMeta]
-
+@app.get("/")
+async def root():
+    print("Hola mundo ")
+    
 @app.post("/emparejar")
 async def emparejar(data: RequestData, x_api_key: Optional[str] = Header(None)):
     if x_api_key != API_KEY:
